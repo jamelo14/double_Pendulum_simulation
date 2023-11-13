@@ -12,10 +12,13 @@ dtheta2_ini		=	0
 ddtheta1_ini	=	0
 ddtheta2_ini	=	0
 
-#				t	t1	t2	dt1	dt2 ddt1 ddt2
+#  		0   1   2   3   4   5    6
+#		t   t1	t2  dt1	dt2 ddt1 ddt2
 resultados = [  [], [], [], [], []            ]
 
-r		   = [      [], [], [], [], [],  []   ]
+#		0   1   2   3   4    5
+#		t1  t2  dt1 dt2 ddt1 ddt2
+r          = [  [], [], [], [], [],  []   ]
 
 resultados[0][0] = 0
 resultados[1][0] = theta1_ini
@@ -33,11 +36,11 @@ r[5] = ddtheta2_ini
 def RK4(f, r, t, h):
 
 	k1 = h*f(r,t)
-    k2 = h*f(r+k1/2,t+h/2)
-    k3 = h*f(r+k2/2,t+h/2)
-    k4 = h*f(r+k3,t+h)
+	k2 = h*f(r+k1/2,t+h/2)
+	k3 = h*f(r+k2/2,t+h/2)
+	k4 = h*f(r+k3,t+h)
     
-    return (1/6)*(k1+2*k2+2*k3+k4)
+	return (1/6)*(k1+2*k2+2*k3+k4)
     
 	
 def f(r, t):
@@ -51,20 +54,13 @@ def f(r, t):
 		 
 def sim():
 	for t in range(0, tfinal, h):
-		theta1 = theta1_ini
-		theta2 = theta2_ini
-		dtheta1 = 
-		
-		dtheta1 += RK4(ddt1, r, t, h)
-		dtheta2 += RK4(ddt2, r, t, h)
-		
+		r[] += RK4(ddt1, r, t, h)
+		r[] += RK4(ddt2, r, t, h)
+
+		r[] = h*r[4]
+		r[] = h*r[5]
 		
 		
-		r[0] = theta1
-		r[1] = theta2
-		r[2] = dtheta1
-		r[3] = dtheta2
-		r[4] = ddt1(r, t)
-		r[5] = ddt2(r, t)
+
 
 		
