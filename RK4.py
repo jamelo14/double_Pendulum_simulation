@@ -9,8 +9,8 @@ theta1_ini		=	pi/4
 theta2_ini		=	pi/2
 dtheta1_ini		=	0
 dtheta2_ini		=	0
-ddtheta1_ini	=	0
-ddtheta2_ini	=	0
+ddtheta1_ini		=	0
+ddtheta2_ini		=	0
 
 #  		0   1   2   3   4   5    6
 #		t   t1	t2  dt1	dt2 ddt1 ddt2
