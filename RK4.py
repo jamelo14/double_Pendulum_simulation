@@ -54,13 +54,24 @@ def f(r, t):
 		 
 def sim():
 	for t in range(0, tfinal, h):
-		r[] += RK4(ddt1, r, t, h)
-		r[] += RK4(ddt2, r, t, h)
+		ac_1 = ddt1(r, t)
+		ac_2 = ddt2(r, t)
+		
+		r[2] += RK4(ddt1, r, t, h)
+		r[3] += RK4(ddt2, r, t, h)
 
-		r[] = h*r[4]
-		r[] = h*r[5]
+		r[1] = h*r[4]
+		r[2] = h*r[5]
+
+		r[4] = ac_1
+		r[5] = ac_2
 		
-		
+		resultados[0].append(t)
+		resultados[1].append(r[1])
+		resultados[2].append(r[2])
+		resultados[3].append(r[3])
+		resultados[4].append(r[4])
+				
 
 
 		
