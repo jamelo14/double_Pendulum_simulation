@@ -12,13 +12,13 @@ dtheta2_ini		=	0
 ddtheta1_ini		=	0
 ddtheta2_ini		=	0
 
-#  		0   1   2   3   4   5    6
-#		t   t1	t2  dt1	dt2 ddt1 ddt2
-resultados = [  [], [], [], [], []            ]
+#  		0   1   2   3   4  
+#		t   t1	t2  dt1	dt2
+resultados = [  [], [], [], [], [] ]
 
 #		0   1   2   3   4    5
 #		t1  t2  dt1 dt2 ddt1 ddt2
-r          = [  [], [], [], [], [],  []   ]
+r          = [  [], [], [], [], [],  [] ]
 
 resultados[0][0] = 0
 resultados[1][0] = theta1_ini
