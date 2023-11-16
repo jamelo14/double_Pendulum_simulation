@@ -35,8 +35,8 @@ import matplotlib.pyplot as plt
 
 
 # Definindo a matriz dos reultados
-#				0	 1    2    3    4    5    6    7    8   9     10
-#			    t    t1   t2   dt1  dt2  x1   y1   x2   y2  ddt1  ddt2
+#		0    1    2    3    4    5    6    7    8   9     10
+#        	t    t1   t2   dt1  dt2  x1   y1   x2   y2  ddt1  ddt2
 resultados = [  [],  [],  [],  [],  [],  [],  [],  [],  [], [],   []  ]
 
 # Carregando os dados iniciais:
@@ -116,13 +116,13 @@ def solver_integracao_numerica():
 
 
 	if comparar_com_pendulo_experimental == True:
-		#			 t  x1   y1  x2  y2  dx1 dy1 dx2 dy2
+		#            t  x1   y1  x2  y2  dx1 dy1 dx2 dy2
 		#arquivo = [ [], [], [], [], [], [], [], [], []  ]
 		
 		arquivo = lerSV(arquivo_de_dados, sep=separador)
 		
-		#		    t   t1  t2  dt1  dt2  x1  y1  x2 y2
-		res_exp = [ [], [], [], [],  [] 		  		]
+		#           t   t1  t2  dt1  dt2  x1  y1  x2 y2
+		res_exp = [ [], [], [], [],  [] 		  ]
 		
 		for i in range(len(arquivo[0])):
 			# adicionando tempo:
