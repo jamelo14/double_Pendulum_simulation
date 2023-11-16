@@ -5,31 +5,29 @@ l1			=	1		#[m]
 l2			=	1		#[m]
 m1			=	1		#[kg]
 m2			=	1		#[kg]
-t1			=	pi/6	#[rad]
-t2			=	pi/6	#[rad]
+t1			=	pi/6		#[rad]
+t2			=	pi/6		#[rad]
 dt1			=	0		#[rad/s]
 dt2			=	0		#[rad/s]
-ddt1_var	=	0		#[rad/s^2]
-ddt2_var	=	0		#[rad/s^2]
-g 			=	9.81	#[m/s^2]
+ddt1_var		=	0		#[rad/s^2]
+ddt2_var		=	0		#[rad/s^2]
+g 			=	9.81		#[m/s^2]
 I1			=	1		#[kg*m^2]
 I2			=	1		#[kg*m^2]
 
-tempo_final	=	40	 	#[s]
+tempo_final		=	40		#[s]
+
+# Nit é o número de iterações. Não tem unidade física.
+Nit			=	1000000		#[]
 
 # Opção para plotar resultados comparando resultado numérico com experimental
 # Caso True, será necessário a inserção de um arquivo com os dados do pêndulo simulado
 comparar_com_pendulo_experimental	=	False
-arquivo_de_dados					=	"pendulo_experimental"
-separador							=	"\t\t"
-
-# Nit é o número de iterações. Não tem unidade física.
-Nit			=	1000000	#[]
+arquivo_de_dados			=	"pendulo_experimental"
+separado				=	"\t\t"
 
 
 # -------------------------------------------------------------------------
-
-passo_de_tempo	=	tempo_final/Nit
 
 # Importando bibliotecas
 from math import *
@@ -70,7 +68,6 @@ def lerSV(nome, sep="\t"):
 			saida[i].append(float(lista[i]))
 			
 	return saida
-		
 	
 def paraGrausList(lista):
 	return list(map(lambda x: paraGraus(x), lista))
@@ -83,6 +80,8 @@ def ddt1(t, t1, t2, dt1, dt2, ddt2):
 	
 def ddt2(t, t1, t2, dt1, dt2, ddt1):
 	return -( (2*l1*l2*m2*sin(t1)*ddt1 + 2*l1*l2*m2*cos(t1)*dt1**2 + 2*g*l2*m2)*sin(t2) + (2*l1*l2*m2*cos(t1)*ddt1 - 2*l1*l2*m2*sin(t1)*dt1**2 ) * cos(t2) + 4*I2*ddt1) / (l2**2 * m2 + 4*I2)
+
+passo_de_tempo	= tempo_final/Nit
 
 def solver_integracao_numerica():
 	t=0
