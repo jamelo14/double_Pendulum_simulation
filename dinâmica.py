@@ -28,6 +28,9 @@ Nit			=	1000000	#[]
 
 # Opção para plotar resultados comparando resultado numérico com experimental
 # Caso True, será necessário a inserção de um arquivo com os dados do pêndulo simulado
+# O arquivo pode ter qualquer tipo de separador, desde que este seja especificado abaixo
+# e desde que os dados sigam a seguinte ordem no arquivo:
+#	t  x1  y1  x2  y2  t1  t2  dt1  dt2
 comparar_com_pendulo_experimental	=	True
 arquivo_de_dados			=	"pendulo_exp"
 separador				=	"\t\t"
