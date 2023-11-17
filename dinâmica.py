@@ -1,33 +1,41 @@
 # --------------------------- Configurações -----------------------------
 pi = 3.141592653589793
 
-l1			=	1		#[m]
-l2			=	1		#[m]
-m1			=	1		#[kg]
-m2			=	1		#[kg]
-t1			=	pi/6		#[rad]
-t2			=	pi/6		#[rad]
-dt1			=	0		#[rad/s]
-dt2			=	0		#[rad/s]
-ddt1_var		=	0		#[rad/s^2]
-ddt2_var		=	0		#[rad/s^2]
-g 			=	9.81		#[m/s^2]
-I1			=	1		#[kg*m^2]
-I2			=	1		#[kg*m^2]
+def paraRad(angulo):
+	return ((pi/180) * angulo)
 
-tempo_final		=	40		#[s]
+
+l1			=	0.7	#[m]
+l2			=	0.6	#[m]
+m1			=	0.4	#[kg]
+m2			=	0.35	#[kg]
+t1			=	pi/18	#[rad]
+t2			=	pi/18	#[rad]
+dt1			=	0	#[rad/s]
+dt2			=	0	#[rad/s]
+ddt1_var		=	0	#[rad/s^2]
+ddt2_var		=	0	#[rad/s^2]
+g 			=	9.81	#[m/s^2]
+I1			=	1	#[kg*m^2]
+I2			=	1	#[kg*m^2]
+
+# Tempo final de simulação
+tempo_final		=	80	#[s]
 
 # Nit é o número de iterações. Não tem unidade física.
-Nit			=	1000000		#[]
+Nit			=	1000000	#[]
+
 
 # Opção para plotar resultados comparando resultado numérico com experimental
 # Caso True, será necessário a inserção de um arquivo com os dados do pêndulo simulado
-comparar_com_pendulo_experimental	=	False
-arquivo_de_dados			=	"pendulo_experimental"
-separado				=	"\t\t"
+comparar_com_pendulo_experimental	=	True
+arquivo_de_dados			=	"pendulo_exp"
+separador				=	"\t\t"
 
 
 # -------------------------------------------------------------------------
+
+passo_de_tempo	=	tempo_final/Nit
 
 # Importando bibliotecas
 from math import *
@@ -36,7 +44,7 @@ import matplotlib.pyplot as plt
 
 # Definindo a matriz dos reultados
 #		0    1    2    3    4    5    6    7    8   9     10
-#        	t    t1   t2   dt1  dt2  x1   y1   x2   y2  ddt1  ddt2
+#	        t    t1   t2   dt1  dt2  x1   y1   x2   y2  ddt1  ddt2
 resultados = [  [],  [],  [],  [],  [],  [],  [],  [],  [], [],   []  ]
 
 # Carregando os dados iniciais:
@@ -68,6 +76,7 @@ def lerSV(nome, sep="\t"):
 			saida[i].append(float(lista[i]))
 			
 	return saida
+		
 	
 def paraGrausList(lista):
 	return list(map(lambda x: paraGraus(x), lista))
@@ -80,8 +89,6 @@ def ddt1(t, t1, t2, dt1, dt2, ddt2):
 	
 def ddt2(t, t1, t2, dt1, dt2, ddt1):
 	return -( (2*l1*l2*m2*sin(t1)*ddt1 + 2*l1*l2*m2*cos(t1)*dt1**2 + 2*g*l2*m2)*sin(t2) + (2*l1*l2*m2*cos(t1)*ddt1 - 2*l1*l2*m2*sin(t1)*dt1**2 ) * cos(t2) + 4*I2*ddt1) / (l2**2 * m2 + 4*I2)
-
-passo_de_tempo	= tempo_final/Nit
 
 def solver_integracao_numerica():
 	t=0
@@ -114,50 +121,32 @@ def solver_integracao_numerica():
 		resultados[9].append(ddt1_var)
 		resultados[10].append(ddt2_var)	
 
-
+	arquivo = []
 	if comparar_com_pendulo_experimental == True:
-		#            t  x1   y1  x2  y2  dx1 dy1 dx2 dy2
+		#	     t  x1   y1  x2  y2  t1  t2  dt1 dt2
 		#arquivo = [ [], [], [], [], [], [], [], [], []  ]
 		
 		arquivo = lerSV(arquivo_de_dados, sep=separador)
 		
-		#           t   t1  t2  dt1  dt2  x1  y1  x2 y2
-		res_exp = [ [], [], [], [],  [] 		  ]
-		
-		for i in range(len(arquivo[0])):
-			# adicionando tempo:
-			res_exp[0].append(arquivo[0][i])
-			
-			# adicionando t1 experimental:
-			res_exp[1].append(asin(arquivo[1][i]/l1))
-		
-			# adicionando t2 experimental:
-			res_exp[2].append(asin((arquivo[3][i] - arquivo[1][i])/l2))
-		
-			#adicionando dt1 experimental
-			res_exp[3].append(arquivo[5][i]/(l1* cos(res_exp[1][i])))
-		
-			#adicionando dt2 experimental
-			res_exp[4].append( (arquivo[7][i] - arquivo[5][i]) / (l1*cos(res_exp[1][i])) )
-			
-			#adicionando a posição
-			res_exp.append(arquivo[1:5])
-		
-	graph(resultados, res_exp)
+	graph(resultados, arquivo)
 
 def graph(res0, res1):
-	# outros estilos: "grayscale", 
-	plt.style.use("tableau-colorblind10")
+	# plotando o primeiro pêndulo
+	
+	# Estilos úteis: "grayscale", "tableau-colorblind10"
+	estilo = "tableau-colorblind10"
+	
+	cor_teorico = "blue"
+	cor_experimental = "red"
+	
+	plt.style.use(estilo)
 
 	plt.figure(figsize=(16,12))
 
 	#	------------------------------------------
 	plt.subplot(2, 3, 1)
-	plt.plot(res0[0], res0[1])
+	plt.plot(res0[0], res0[1], color=cor_teorico)
 	plt.grid()
-	
-	if comparar_com_pendulo_experimental == True:
-		plt.plot(res1[0], res1[1])
 	
 	plt.xlabel("t [s]")
 	plt.ylabel("θ [rad]")
@@ -166,11 +155,8 @@ def graph(res0, res1):
 	#	------------------------------------------
 	plt.subplot(2,3,2)
 	plt.grid()
-	plt.plot(res0[5], res0[6])
-	
-	if comparar_com_pendulo_experimental == True:
-		plt.plot(res1[5], res1[6])
-	
+	plt.plot(res0[5], res0[6], color=cor_teorico)
+
 	plt.xlabel("x [m]")
 	plt.ylabel("y [m]")
 	plt.title("posição da extremidade do primeiro corpo")
@@ -179,10 +165,7 @@ def graph(res0, res1):
 	
 	plt.subplot(2,3,3)
 	plt.grid()
-	plt.plot(res0[1], res0[3])
-	
-	if comparar_com_pendulo_experimental == True:
-		plt.plot(res1[1], res1[3])
+	plt.plot(res0[1], res0[3], color=cor_teorico)
 	
 	plt.xlabel("θ [rad]")
 	plt.ylabel("θ ponto [rad/s]")
@@ -190,11 +173,8 @@ def graph(res0, res1):
 	
 	#	------------------------------------------
 	plt.subplot(2, 3, 4)
-	plt.plot(res0[0], res0[2])
+	plt.plot(res0[0], res0[2], color=cor_teorico)
 	plt.grid()
-	
-	if comparar_com_pendulo_experimental == True:
-		plt.plot(res1[0], res1[2])
 	
 	plt.xlabel("t [s]")
 	plt.ylabel("θ [rad]")
@@ -203,10 +183,7 @@ def graph(res0, res1):
 	#	------------------------------------------
 	plt.subplot(2,3,5)
 	plt.grid()
-	plt.plot(res0[7], res0[8])
-	
-	if comparar_com_pendulo_experimental == True:
-		plt.plot(res1[7], res1[8])
+	plt.plot(res0[7], res0[8], color=cor_teorico)
 	
 	plt.xlabel("x [m]")
 	plt.ylabel("y [m]")
@@ -216,10 +193,7 @@ def graph(res0, res1):
 	
 	plt.subplot(2,3,6)
 	plt.grid()
-	plt.plot(res0[2], res0[4])
-	
-	if comparar_com_pendulo_experimental == True:
-		plt.plot(res1[2], res1[4])
+	plt.plot(res0[2], res0[4], color=cor_teorico)
 	
 	plt.xlabel("θ [rad]")
 	plt.ylabel("θ ponto [rad/s]")
@@ -228,5 +202,72 @@ def graph(res0, res1):
 
 	plt.tight_layout()
 	plt.show()
+	
+	# Comparando com o pêndulo experimental, caso dejesado
+	if comparar_com_pendulo_experimental == True:
+		plt.style.use(estilo)
+
+		plt.figure(figsize=(16,12))
+
+		#	------------------------------------------
+		plt.subplot(2, 3, 1)
+		plt.plot(res1[0], res1[5], color=cor_experimental)
+		plt.grid()
+		
+		
+		plt.xlabel("t [s]")
+		plt.ylabel("θ [rad]")
+		plt.title("θ_1 em função do tempo")
+		
+		#	------------------------------------------
+		plt.subplot(2,3,2)
+		plt.grid()
+		plt.plot(res1[1], res1[2], color=cor_experimental)
+		
+		plt.xlabel("x [m]")
+		plt.ylabel("y [m]")
+		plt.title("posição da extremidade do primeiro corpo")
+		
+		#	------------------------------------------
+		
+		plt.subplot(2,3,3)
+		plt.grid()
+		plt.plot(res1[5], res1[7], color=cor_experimental)	
+		
+		plt.xlabel("θ [rad]")
+		plt.ylabel("θ ponto [rad/s]")
+		plt.title("velocidade angular em função do ângulo do primeiro corpo")
+		
+		#	------------------------------------------
+		plt.subplot(2, 3, 4)
+		plt.plot(res1[0], res1[8], color=cor_experimental)
+		plt.grid()
+		
+		plt.xlabel("t [s]")
+		plt.ylabel("θ [rad]")
+		plt.title("θ_2 em função do tempo")
+		
+		#	------------------------------------------
+		plt.subplot(2,3,5)
+		plt.grid()
+		plt.plot(res1[3], res1[4], color=cor_experimental)
+		
+		plt.xlabel("x [m]")
+		plt.ylabel("y [m]")
+		plt.title("posição da extremidade do segundo corpo")
+		
+		#	------------------------------------------
+		
+		plt.subplot(2,3,6)
+		plt.grid()
+		plt.plot(res1[6], res1[8], color=cor_experimental)
+		
+		plt.xlabel("θ [rad]")
+		plt.ylabel("θ ponto [rad/s]")
+		plt.title("velocidade angular em função do ângulo do segundo corpo")
+		
+
+		plt.tight_layout()
+		plt.show()
 
 solver_integracao_numerica()
