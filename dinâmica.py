@@ -1,14 +1,12 @@
 # --------------------------- Configurações -----------------------------
 pi = 3.141592653589793
 
-
-
 l1			=	0.8				#[m]
 l2			=	0.7				#[m]
 m1			=	120.53			#[kg]
 m2			=	105.36			#[kg]
-t1			=	pi/4			#[rad]
-t2			=	pi/3			#[rad]
+t1			=	2*pi			#[rad]
+t2			=	2*pi			#[rad]
 dt1			=	0				#[rad/s]
 dt2			=	0				#[rad/s]
 ddt1_var	=	0				#[rad/s^2]
@@ -65,7 +63,6 @@ resultados[10].append(0)
 
 def paraGrausList(lista):
 	return list(map(lambda x: paraGraus(x), lista))
-
 
 def paraGraus(angulo):
 	return ((180/pi) * angulo)
